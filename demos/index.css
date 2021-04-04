@@ -1,0 +1,31 @@
+body {
+  display: grid;
+  grid-template-columns: 20% auto;
+  grid-template-rows: 100%;
+
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+}
+
+#svg_div{
+  grid-column-start: 2;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 1;
+  background-color: grey;
+}
+
+#selection_menu {
+  grid-column-start: 1;
+  grid-column-end: 1;
+
+  grid-row-start: 1;
+  grid-row-end: 1;  
+
+  overflow-y: scroll;
+  overflow-x: wrap;
+  
+  width: 100%;
+  height: 100%;
+}

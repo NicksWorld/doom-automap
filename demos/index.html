@@ -1,16 +1,43 @@
 <html>
-  <body>
-    <div id="viewport" style="width: 100%; height: 100%;">
-      <svg id="map"/>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://blog.johnkrauss.com/jquery-svgpan/jquery-svgpan.min.js"></script>
+<head>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  
+  <div id="svg_div">
+    <svg id="map" style = "width: 100%; height: 100%;">
+      <g id="viewport"></g>
+    </svg>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://blog.johnkrauss.com/jquery-svgpan/jquery-svgpan.min.js"></script>
+    
+  <div id="selection_menu">
+  <button onclick="loadSVG('./doom1/E1M1.svg')">DOOM1 E1M1</button>
+  <button onclick="loadSVG('./doom1/E1M2.svg')">DOOM1 E1M2</button>
+  <button onclick="loadSVG('./doom1/E1M3.svg')">DOOM1 E1M3</button>
+  <button onclick="loadSVG('./doom1/E1M4.svg')">DOOM1 E1M4</button>
+  <button onclick="loadSVG('./doom1/E1M5.svg')">DOOM1 E1M5</button>
+  <button onclick="loadSVG('./doom1/E1M6.svg')">DOOM1 E1M6</button>
+  <button onclick="loadSVG('./doom1/E1M7.svg')">DOOM1 E1M7</button>
+  <button onclick="loadSVG('./doom1/E1M8.svg')">DOOM1 E1M8</button>
+  <button onclick="loadSVG('./doom1/E1M9.svg')">DOOM1 E1M9</button>
+
+
+  <button onclick="loadSVG('./sunlust/MAP01.svg')">Sunlust MAP01</button>
+  <button onclick="loadSVG('./sunlust/MAP02.svg')">Sunlust MAP02</button>
+  <button onclick="loadSVG('./sunlust/MAP03.svg')">Sunlust MAP03</button>
+  <button onclick="loadSVG('./sunlust/MAP04.svg')">Sunlust MAP04</button>
+  <button onclick="loadSVG('./sunlust/MAP05.svg')">Sunlust MAP05</button>
+  </div>
+  
     <script>
-      function loadSVG(name) {
+    	function loadSVG(name) {
         var loadXML = new XMLHttpRequest;
         function handler(){
           if(loadXML.readyState == 4 &&loadXML.status == 200){
-            document.getElementById("map").innerHTML=loadXML.responseText
+            document.getElementById("viewport").innerHTML=loadXML.responseText
           }
         }
         if (loadXML != null){
@@ -20,8 +47,7 @@
         }
       }
 
-       $('map').svgPan('viewport');
+       $('svg').svgPan('viewport');
     </script>
-    <button onclick="loadSVG('./doom1/E1M1.svg')">map01</button>
-  </body>
+</body>
 </html>
