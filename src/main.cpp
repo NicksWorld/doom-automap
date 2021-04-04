@@ -5,14 +5,30 @@
 #include <cstring>
 
 int main(int argc, char* argv[]) {
-  if (argc != 3) {
-    printf("Usage: ./doomsvg </path/to/wad> <mapname>\n");
+  if (argc < 3) {
+    printf("Usage: ./doomsvg </path/to/wad> <mapname> [options]\n-deathmatch Draw deathmatch spawns (off by default)\n-multiplayer Draw player 1-4 spawns (off by default)\n-nospawns Disables drawing of all player spawns (off by default)\n");
     exit(1);
   }
 
   if (std::strlen(argv[2]) > 8) {
     printf("Valid map names are less than 8 characters\n");
     exit(1);
+  }
+
+  bool draw_multiplayer = false;
+  bool draw_deathmatch = false;
+  bool draw_spawns = true;
+
+  // Parse additional options (multiplayer, deathmatch, etc)
+  for (int i = 3; i < argc; i++) {
+    char* argument = argv[i];
+    if (std::strcmp(argument, "-deathmatch") == 0) {
+      draw_deathmatch = true;
+    } else if (std::strcmp(argument, "-multiplayer") == 0) {
+      draw_multiplayer = true;
+    } else if (std::strcmp(argument, "-nospawns") == 0) {
+      draw_spawns = false;
+    }
   }
 
   // Load a wadfile
@@ -148,56 +164,56 @@ int main(int argc, char* argv[]) {
       color.b
     );
   }
+  if (draw_spawns) {
+    for(int i = 0; i < things.size(); i++) {
+      // Player starts + deathmatch start
+      if ((things[i].kind >= 1 && things[i].kind <= 4) || things[i].kind == 11) {
+        color_t color = playpal[MAPCOLOR_SNGL];
 
-  bool is_multiplayer = false;
-  for (int i = 0; i < things.size(); i++) {
-    if (things[i].kind > 1 && things[i].kind <= 4) {
-      is_multiplayer = true;
-    }
-  }
-
-  for(int i = 0; i < things.size(); i++) {
-    // Player starts + deathmatch start
-    if ((things[i].kind >= 1 && things[i].kind <=4)) {
-      // Draw player
-      color_t color = playpal[MAPCOLOR_SNGL];
-      if (is_multiplayer) {
-        switch(things[i].kind) {
-        case 1:
-          // Player 1
-          color = playpal[MAPCOLOR_PLYR0];
-          break;
-        case 2:
-          // Player 2
-          color = playpal[MAPCOLOR_PLYR1];
-          break;
-        case 3:
-          // Player 3
-          color = playpal[MAPCOLOR_PLYR2];
-          break;
-        case 4:
-          // Player 4
-          color = playpal[MAPCOLOR_PLYR3];
-          break;
+        if (draw_multiplayer) {
+          switch(things[i].kind) {
+          case 1:
+            color = playpal[MAPCOLOR_PLYR0];
+            break;
+          case 2:
+            color = playpal[MAPCOLOR_PLYR1];
+            break;
+          case 3:
+            color = playpal[MAPCOLOR_PLYR2];
+            break;
+          case 4:
+            color = playpal[MAPCOLOR_PLYR3];
+            break;
+          }
+        } else if (things[i].kind != 1 && things[i].kind != 11) {
+          continue;
         }
+
+        if (!draw_deathmatch && things[i].kind == 11) {
+          continue; // Don't draw a deathmatch spawn if not wanted
+        }
+
+        if (draw_deathmatch && things[i].kind == 1 && !draw_multiplayer) {
+          continue; // Deathmatch displays should not contain the main player (unless multiplayer)
+        }
+
+        printf("<g width=\"32\" height=\"32\" transform=\"translate(%d, %d)\" style=\"stroke:rgb(%d, %d, %d);\">",
+          things[i].x + x_offset, resolution_y - (things[i].y + y_offset),
+          color.r,
+          color.g,
+          color.b
+        );
+
+        int angle = 270 - things[i].angle;
+        printf("<line x1=\"0\" y1=\"-12\" x2=\"0\" y2=\"16\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
+        printf("<line x1=\"0\" y1=\"16\" x2=\"4\" y2=\"8\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
+        printf("<line x1=\"0\" y1=\"16\" x2=\"-4\" y2=\"8\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
+        printf("<line x1=\"0\" y1=\"-12\" x2=\"4\" y2=\"-16\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
+        printf("<line x1=\"0\" y1=\"-12\" x2=\"-4\" y2=\"-16\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
+        printf("<line x1=\"0\" y1=\"-8\" x2=\"4\" y2=\"-12\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
+        printf("<line x1=\"0\" y1=\"-8\" x2=\"-4\" y2=\"-12\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
+        printf("</g>");
       }
-
-      printf("<g width=\"32\" height=\"32\" transform=\"translate(%d, %d)\" style=\"stroke:rgb(%d, %d, %d);\">",
-        things[i].x + x_offset, resolution_y - (things[i].y + y_offset),
-        color.r,
-        color.g,
-        color.b
-      );
-
-      int angle = 270 - things[i].angle;
-      printf("<line x1=\"0\" y1=\"-12\" x2=\"0\" y2=\"16\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
-      printf("<line x1=\"0\" y1=\"16\" x2=\"4\" y2=\"8\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
-      printf("<line x1=\"0\" y1=\"16\" x2=\"-4\" y2=\"8\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
-      printf("<line x1=\"0\" y1=\"-12\" x2=\"4\" y2=\"-16\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
-      printf("<line x1=\"0\" y1=\"-12\" x2=\"-4\" y2=\"-16\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
-      printf("<line x1=\"0\" y1=\"-8\" x2=\"4\" y2=\"-12\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
-      printf("<line x1=\"0\" y1=\"-8\" x2=\"-4\" y2=\"-12\" transform=\"rotate(%d)\" vector-effect=\"non-scaling-stroke\"/>", angle);
-      printf("</g>");
     }
   }
   printf("</svg>\n");
