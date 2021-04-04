@@ -1,0 +1,27 @@
+<html>
+  <body>
+    <div id="viewport" style="width: 100%; height: 100%;">
+      <svg id="map"/>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://blog.johnkrauss.com/jquery-svgpan/jquery-svgpan.min.js"></script>
+    <script>
+      function loadSVG(name) {
+        var loadXML = new XMLHttpRequest;
+        function handler(){
+          if(loadXML.readyState == 4 &&loadXML.status == 200){
+            document.getElementById("map").innerHTML=loadXML.responseText
+          }
+        }
+        if (loadXML != null){
+          loadXML.open("GET", name, true);
+          loadXML.onreadystatechange = handler;
+          loadXML.send();
+        }
+      }
+
+       $('map').svgPan('viewport');
+    </script>
+    <button onclick="loadSVG('./doom1/E1M1.svg')">map01</button>
+  </body>
+</html>
