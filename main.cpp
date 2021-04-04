@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
 
   for(int i = 0; i < things.size(); i++) {
     // Player starts + deathmatch start
-    if ((things[i].kind >= 1 && things[i].kind <=4) || things[i].kind == 11) {
+    if ((things[i].kind >= 1 && things[i].kind <=4)) {
       // Draw player
       color_t color = playpal[MAPCOLOR_SNGL];
       if (is_multiplayer) {
