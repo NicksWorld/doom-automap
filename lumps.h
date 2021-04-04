@@ -1,6 +1,22 @@
+#ifndef LUMP_H
+#define LUMP_H
+
 #include <cstdint>
 #include <stdlib.h>
 #include <sys/types.h>
+
+enum MapLumps {
+  THINGS = 1,
+  LINEDEFS,
+  SIDEDEFS,
+  VERTEXES,
+  SEGS,
+  SSECTORS,
+  NODES,
+  SECTORS,
+  REJECT,
+  BLOCKMAP,
+};
 
 typedef struct Vertex {
   int16_t x;
@@ -30,3 +46,52 @@ typedef struct Linedef {
   uint16_t right_sidedef;
   uint16_t left_sidedef;
 } linedef_t;
+
+typedef struct Sector {
+  int16_t floor_height;
+  int16_t ceiling_height;
+  char floor_name[8];
+  char ceiling_name[8];
+  int16_t lightlev;
+  int16_t kind;
+  int16_t tag;
+} sector_t;
+
+typedef struct Subsector {
+  uint16_t seq_count;
+  uint16_t first_seg;
+} subsector_t;
+
+typedef struct Seg {
+  uint16_t start_vertex;
+  uint16_t end_vertex;
+  uint16_t angle;
+  uint16_t linedef_num;
+  uint16_t direction;
+  uint16_t offset;
+} seg_t;
+
+typedef struct Sidedef {
+  int16_t x_offset;
+  int16_t y_offset;
+  char upper_texture[8];
+  char lower_texture[8];
+  char middle_texture[8];
+  int16_t sector_num;
+} sidedef_t;
+
+typedef struct Thing {
+  int16_t x;
+  int16_t y;
+  int16_t angle;
+  int16_t kind;
+  int16_t flags;
+} thing_t;
+
+typedef struct Color {
+  unsigned char r;
+  unsigned char g;
+  unsigned char b;
+} color_t;
+
+#endif // LUMP_H

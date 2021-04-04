@@ -1,3 +1,5 @@
+#include "lumps.h"
+
 #include <string>
 #include <vector>
 
@@ -22,6 +24,16 @@ class WadReader {
 public:
   WadReader(std::string path);
   ~WadReader();
+
+  int LocateMapIndex(char mapname[8]);
+  std::vector<vertex_t> ReadVertexes(char mapname[8]);
+  std::vector<linedef_t> ReadLinedefs(char mapname[8]);
+  std::vector<color_t> ReadPlaypal();
+  std::vector<sector_t> ReadSectors(char mapname[8]);
+  std::vector<subsector_t> ReadSubsectors(char mapname[8]);
+  std::vector<seg_t> ReadSegs(char mapname[8]);
+  std::vector<sidedef_t> ReadSidedefs(char mapname[8]);
+  std::vector<thing_t> ReadThings(char mapname[8]);
 
 private:
   std::vector<char> filedata;
